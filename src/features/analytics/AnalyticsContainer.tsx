@@ -6,8 +6,8 @@ export default function AnalyticsContainer({ children }): JSX.Element {
   return (
     <>
       <Head>
-        <title>SushiSwap Liquidity Pair (SLP) Analytics | Sushi</title>
-        <meta name="description" content="SushiSwap Liquidity Pair (SLP) Analytics by Sushi" />
+        <title>SummitSwap Liquidity Pair (SLP) Analytics | Summit</title>
+        <meta name="description" content="SummitSwap Liquidity Pair (SSLP) Analytics by Summit" />
       </Head>
 
       <Container
