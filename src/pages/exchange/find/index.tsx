@@ -94,7 +94,7 @@ export default function PoolFinder() {
         }
         type="information"
       />
-      <div className="relative p-4 space-y-4 rounded bg-dark-900 shadow-liquidity">
+      <div className="relative p-4 space-y-4 rounded bg-dark-900">
         <AutoColumn gap={'md'}>
           <CurrencySelectPanel
             currency={currency0}
