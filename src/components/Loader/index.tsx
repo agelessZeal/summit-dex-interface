@@ -13,7 +13,7 @@ export default function Loader({
 }) {
   return (
     <svg
-      className="animate-spin-slow"
+      className="animate-spin"
       style={{ height: size, width: size }}
       viewBox="0 0 24 24"
       fill="none"
