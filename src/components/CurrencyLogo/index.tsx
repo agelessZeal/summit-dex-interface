@@ -5,7 +5,7 @@ import Logo from '../Logo'
 import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
 import { getMaticTokenLogoURL } from '../../constants/maticTokenMapping'
 import useHttpLocations from '../../hooks/useHttpLocations'
-
+import Image from 'next/image'
 export const getTokenLogoURL = (address: string, chainId: ChainId) => {
   let imageURL
   if (chainId === ChainId.MAINNET) {
@@ -136,6 +136,11 @@ const CurrencyLogo: FunctionComponent<CurrencyLogoProps> = ({
       return defaultUrls
     }
   }, [currency, uriLocations])
+  if (currency instanceof WrappedTokenInfo) {
+    if (currency.tokenInfo.name === 'SUMMIT') {
+      return <Image src="/Summit.png" width={size} height={size} alt={currency?.symbol} {...rest} />
+    }
+  }
 
   return <Logo srcs={srcs} width={size} height={size} alt={currency?.symbol} {...rest} />
 }
