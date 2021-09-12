@@ -60,7 +60,7 @@ function Farm(): JSX.Element {
   //   },
   // })
 
-  // const farms = useFarms()
+  // const pfarms = useFarms()
 
   const positions = usePositions()
 
@@ -83,7 +83,7 @@ function Farm(): JSX.Element {
   const testFarm = {
     accSushiPerShare: '',
     allocPoint: '100',
-    balance: '0',
+    balance: '316227765016',
     chef: 2,
     id: '0',
     lastRewardTime: '1631266290',
@@ -134,7 +134,7 @@ function Farm(): JSX.Element {
       reserve0: '1928359.887405995540289756',
       reserve1: '1920966.04641',
       reserveETH: '1183.351142427706157233201110976883',
-      reserveUSD: '3841535.30326672239973609585975974',
+      reserveUSD: '4',
       timestamp: '1621898381',
       token0: {
         derivedETH: '0.0003068283960261003490764609134664169',
@@ -153,7 +153,7 @@ function Farm(): JSX.Element {
       },
 
       token1Price: '0.9961657359477946627790088931105365',
-      totalSupply: '1.907498502690058997',
+      totalSupply: '0.000000316227765016',
       trackedReserveETH: '1183.351142427706157233201110976883',
       txCount: '81365',
       type: 0,
@@ -178,7 +178,7 @@ function Farm(): JSX.Element {
           [ChainId.AVALANCHE]: {
             token: 'SMT',
             icon: '/Summit.png',
-            rewardPrice: 0,
+            rewardPrice: 0.001,
           },
         }
 
@@ -186,14 +186,14 @@ function Farm(): JSX.Element {
           {
             token: 'SMT',
             icon: '/Summit.png',
-            rewardPrice: 0,
+            rewardPrice: 0.00001,
             rewardPerBlock: sushiPerBlock,
             rewardPerDay: sushiPerDay,
           },
           {
             token: 'SMT',
             icon: '/Summit.png',
-            rewardPrice: 0,
+            rewardPrice: 0.00001,
             rewardPerBlock: rewardPerBlock,
             rewardPerDay: rewardPerDay,
           },

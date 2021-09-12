@@ -12,7 +12,7 @@ const FarmListItem = ({ farm, ...rest }) => {
   const token0 = useCurrency(farm.pair.token0.id)
   const token1 = useCurrency(farm.pair.token1.id)
 
-  console.log('FarmListItem:', farm, token0, token1)
+  console.log('FarmListItem:', farm)
 
   return (
     <Disclosure {...rest}>
@@ -49,7 +49,7 @@ const FarmListItem = ({ farm, ...rest }) => {
                   {farm?.rewards?.map((reward, i) => (
                     <div key={i} className="flex items-center">
                       <Image
-                        src={'/logo.png'}
+                        src={reward.icon}
                         width="30px"
                         height="30px"
                         className="rounded-md"
