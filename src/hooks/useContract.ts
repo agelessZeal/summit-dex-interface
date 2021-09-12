@@ -32,6 +32,7 @@ import BORING_HELPER_ABI from '../constants/abis/boring-helper.json'
 import CHAINLINK_ORACLE_ABI from '../constants/abis/chainlink-oracle.json'
 import CLONE_REWARDER_ABI from '../constants/abis/clone-rewarder.json'
 import COMPLEX_REWARDER_ABI from '../constants/abis/complex-rewarder.json'
+import SUMMIT_COMPLEX_REWARDER_ABI from '../constants/abis/summit-complex-rewarder.json'
 import { Contract } from '@ethersproject/contracts'
 import EIP_2612_ABI from '../constants/abis/eip-2612.json'
 import ENS_ABI from '../constants/abis/ens-registrar.json'
@@ -49,6 +50,7 @@ import MASTERCHEF_V2_ABI from '../constants/abis/masterchef-v2.json'
 import MEOWSHI_ABI from '../constants/abis/meowshi.json'
 import MERKLE_DISTRIBUTOR_ABI from '../constants/abis/merkle-distributor.json'
 import MINICHEF_ABI from '../constants/abis/minichef-v2.json'
+import SUMMIT_MINCHEF_ABI from '../constants/abis/summit-minichef-v2.json'
 import MULTICALL2_ABI from '../constants/abis/multicall2.json'
 import ROUTER_ABI from '../constants/abis/router.json'
 import SUSHI_ABI from '../constants/abis/sushi.json'
@@ -145,9 +147,15 @@ export function useMasterChefV2Contract(withSignerIfPossible?: boolean): Contrac
   const { chainId } = useActiveWeb3React()
   return useContract(chainId && MASTERCHEF_V2_ADDRESS[chainId], MASTERCHEF_V2_ABI, withSignerIfPossible)
 }
+
 export function useMiniChefContract(withSignerIfPossible?: boolean): Contract | null {
   const { chainId } = useActiveWeb3React()
   return useContract(chainId && MINICHEF_ADDRESS[chainId], MINICHEF_ABI, withSignerIfPossible)
+}
+
+export function useSummitMiniChefContract(withSignerIfPossible?: boolean): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  return useContract(chainId && MINICHEF_ADDRESS[chainId], SUMMIT_MINCHEF_ABI, withSignerIfPossible)
 }
 
 export function useFactoryContract(): Contract | null {
@@ -194,6 +202,10 @@ export function useUniV2FactoryContract(): Contract | null {
 
 export function useComplexRewarderContract(address, withSignerIfPossible?: boolean): Contract | null {
   return useContract(address, COMPLEX_REWARDER_ABI, withSignerIfPossible)
+}
+
+export function useSummitComplexRewarderContract(address, withSignerIfPossible?: boolean): Contract | null {
+  return useContract(address, SUMMIT_COMPLEX_REWARDER_ABI, withSignerIfPossible)
 }
 
 export function useCloneRewarderContract(address, withSignerIfPossibe?: boolean): Contract | null {

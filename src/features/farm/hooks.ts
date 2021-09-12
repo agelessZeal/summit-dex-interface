@@ -9,10 +9,15 @@ import {
 import { Chef, PairType } from './enum'
 import { NEVER_RELOAD, useSingleCallResult, useSingleContractMultipleData } from '../../state/multicall/hooks'
 import { useCallback, useMemo } from 'react'
-import { useMasterChefContract, useMasterChefV2Contract, useMiniChefContract } from '../../hooks/useContract'
+import {
+  useMasterChefContract,
+  useMasterChefV2Contract,
+  useMiniChefContract,
+  useSummitMiniChefContract,
+} from '../../hooks/useContract'
 
 import { Contract } from '@ethersproject/contracts'
-import { SUSHI } from '../../constants'
+import { SUMMIT, SUSHI } from '../../constants'
 import { Zero } from '@ethersproject/constants'
 import concat from 'lodash/concat'
 import { useActiveWeb3React } from '../../hooks/useActiveWeb3React'
@@ -74,6 +79,27 @@ export function useUserInfo(farm, token) {
   const amount = value ? JSBI.BigInt(value.toString()) : undefined
 
   return amount ? CurrencyAmount.fromRawAmount(token, amount) : undefined
+}
+
+export function usePendingSummit(farm) {
+  const { account, chainId } = useActiveWeb3React()
+
+  const contract = useSummitMiniChefContract()
+
+  const args = useMemo(() => {
+    if (!account) {
+      return
+    }
+    return [String(farm.id), String(account)]
+  }, [farm, account])
+
+  const result = useSingleCallResult(args ? contract : null, 'pendingSummit', args)?.result
+
+  const value = result?.[0]
+
+  const amount = value ? JSBI.BigInt(value.toString()) : undefined
+
+  return amount ? CurrencyAmount.fromRawAmount(SUMMIT[chainId], amount) : undefined
 }
 
 export function usePendingSushi(farm) {

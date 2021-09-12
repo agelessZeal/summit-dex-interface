@@ -1,5 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useCloneRewarderContract, useComplexRewarderContract } from '../../hooks/useContract'
+import {
+  useCloneRewarderContract,
+  useComplexRewarderContract,
+  useSummitComplexRewarderContract,
+} from '../../hooks/useContract'
 
 import { BigNumber } from '@ethersproject/bignumber'
 import { ChainId } from '@sushiswap/sdk'
@@ -36,12 +40,15 @@ const usePending = (farm) => {
 
   const complexRewarder = useComplexRewarderContract(farm?.rewarder?.id)
 
+  const summitComplexRewarder = useSummitComplexRewarderContract(farm?.rewarder?.id)
+
   const contract = useMemo(
     () => ({
       [ChainId.MAINNET]: cloneRewarder,
       [ChainId.MATIC]: complexRewarder,
       [ChainId.XDAI]: complexRewarder,
       [ChainId.HARMONY]: complexRewarder,
+      [ChainId.AVALANCHE]: summitComplexRewarder,
     }),
     [complexRewarder, cloneRewarder]
   )

@@ -42,7 +42,7 @@ const features = {
   [ChainId.MATIC_TESTNET]: [Feature.AMM],
   [ChainId.HARMONY]: [Feature.AMM, Feature.LIQUIDITY_MINING, Feature.ANALYTICS],
   [ChainId.HARMONY_TESTNET]: [Feature.AMM],
-  [ChainId.AVALANCHE]: [Feature.AMM],
+  [ChainId.AVALANCHE]: [Feature.AMM, Feature.LIQUIDITY_MINING],
   [ChainId.AVALANCHE_TESTNET]: [Feature.AMM],
   [ChainId.OKEX]: [Feature.AMM],
   [ChainId.OKEX_TESTNET]: [Feature.AMM],
