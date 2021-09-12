@@ -3,7 +3,7 @@ import { ChainId, MASTERCHEF_ADDRESS, MASTERCHEF_V2_ADDRESS, MINICHEF_ADDRESS, T
 import { Chef, PairType } from './enum'
 import { Disclosure, Transition } from '@headlessui/react'
 import React, { useState } from 'react'
-import { usePendingSushi, useUserInfo } from './hooks'
+import { usePendingSushi, useUserInfo, usePendingSummit } from './hooks'
 
 import Button from '../../components/Button'
 import Dots from '../../components/Dots'
@@ -43,7 +43,7 @@ const FarmListItem = ({ farm }) => {
   // TODO: Replace these
   const amount = useUserInfo(farm, liquidityToken)
 
-  const pendingSushi = usePendingSushi(farm)
+  const pendingSummit = usePendingSummit(farm)
 
   const reward = usePendingReward(farm)
 
@@ -54,6 +54,7 @@ const FarmListItem = ({ farm }) => {
       [ChainId.MATIC]: MINICHEF_ADDRESS[ChainId.MATIC],
       [ChainId.XDAI]: MINICHEF_ADDRESS[ChainId.XDAI],
       [ChainId.HARMONY]: MINICHEF_ADDRESS[ChainId.HARMONY],
+      [ChainId.AVALANCHE]: MINICHEF_ADDRESS[ChainId.AVALANCHE],
     },
   }
 
@@ -184,7 +185,7 @@ const FarmListItem = ({ farm }) => {
             </Button>
           </div>
         </div>
-        {pendingSushi && pendingSushi.greaterThan(ZERO) && (
+        {pendingSummit && pendingSummit.greaterThan(ZERO) && (
           <div className="px-4 pb-4">
             <Button
               color="gradient"
@@ -201,7 +202,7 @@ const FarmListItem = ({ farm }) => {
                 setPendingTx(false)
               }}
             >
-              {i18n._(t`Harvest ${formatNumber(pendingSushi.toFixed(18))} SUSHI ${
+              {i18n._(t`Harvest ${formatNumber(pendingSummit.toFixed(18))} SUMMIT ${
                 farm.rewards.length > 1 ? `& ${formatNumber(reward)} ${farm.rewards[1].token}` : null
               }
                 `)}

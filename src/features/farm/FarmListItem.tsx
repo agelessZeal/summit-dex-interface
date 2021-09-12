@@ -12,6 +12,8 @@ const FarmListItem = ({ farm, ...rest }) => {
   const token0 = useCurrency(farm.pair.token0.id)
   const token1 = useCurrency(farm.pair.token1.id)
 
+  console.log('FarmListItem:', farm, token0, token1)
+
   return (
     <Disclosure {...rest}>
       {({ open }) => (
@@ -24,7 +26,8 @@ const FarmListItem = ({ farm, ...rest }) => {
           >
             <div className="grid grid-cols-4">
               <div className="flex col-span-2 space-x-4 md:col-span-1">
-                <DoubleLogo currency0={token0} currency1={token1} size={40} />
+                {token1 && token0 && <DoubleLogo currency0={token0} currency1={token1} size={40} />}
+
                 <div className="flex flex-col justify-center">
                   <div>
                     <span className="font-bold">{farm?.pair?.token0?.symbol}</span>/
@@ -32,12 +35,12 @@ const FarmListItem = ({ farm, ...rest }) => {
                       {farm?.pair?.token1?.symbol}
                     </span>
                   </div>
-                  {farm?.pair?.type === PairType.SWAP && (
+                  {/* {farm?.pair?.type === PairType.SWAP && (
                     <div className="text-xs md:text-base text-secondary">SushiSwap Farm</div>
                   )}
                   {farm?.pair?.type === PairType.KASHI && (
                     <div className="text-xs md:text-base text-secondary">Kashi Farm</div>
-                  )}
+                  )} */}
                 </div>
               </div>
               <div className="flex flex-col justify-center font-bold">{formatNumber(farm.tvl, true)}</div>
@@ -46,7 +49,7 @@ const FarmListItem = ({ farm, ...rest }) => {
                   {farm?.rewards?.map((reward, i) => (
                     <div key={i} className="flex items-center">
                       <Image
-                        src={reward.icon}
+                        src={'/logo.png'}
                         width="30px"
                         height="30px"
                         className="rounded-md"

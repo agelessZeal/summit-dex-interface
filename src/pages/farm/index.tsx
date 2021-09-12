@@ -2,6 +2,7 @@ import { Chef, PairType } from '../../features/farm/enum'
 import { useActiveWeb3React, useFuse } from '../../hooks'
 import {
   useAlcxPrice,
+  useAvaxPrice,
   useAverageBlockTime,
   useCvxPrice,
   useEthPrice,
@@ -37,45 +38,76 @@ import { usePositions } from '../../features/farm/hooks'
 import { useRouter } from 'next/router'
 import useFarmRewards from '../../hooks/useFarmRewards'
 
-export default function Farm(): JSX.Element {
+import NetworkGuard from '../../guards/Network'
+
+function Farm(): JSX.Element {
   const { chainId } = useActiveWeb3React()
   const router = useRouter()
 
   const type = router.query.filter == null ? 'all' : (router.query.filter as string)
 
-  const pairAddresses = useFarmPairAddresses()
+  // const pairAddresses = useFarmPairAddresses()
 
-  const swapPairs = useSushiPairs({
-    where: {
-      id_in: pairAddresses,
-    },
-  })
+  // const swapPairs = useSushiPairs({
+  //   where: {
+  //     id_in: pairAddresses,
+  //   },
+  // })
 
-  const kashiPairs = useKashiPairs({
-    where: {
-      id_in: pairAddresses,
-    },
-  })
+  // const kashiPairs = useKashiPairs({
+  //   where: {
+  //     id_in: pairAddresses,
+  //   },
+  // })
 
-  const farms = useFarms()
+  // const farms = useFarms()
 
   const positions = usePositions()
 
   const averageBlockTime = useAverageBlockTime()
 
-  const masterChefV1TotalAllocPoint = useMasterChefV1TotalAllocPoint()
+  // const masterChefV1TotalAllocPoint = useMasterChefV1TotalAllocPoint()
 
-  const masterChefV1SushiPerBlock = useMasterChefV1SushiPerBlock()
+  // const masterChefV1SushiPerBlock = useMasterChefV1SushiPerBlock()
 
   // TODO: Obviously need to sort this out but this is fine for time being,
   // prices are only loaded when needed for a specific network
   const [sushiPrice, ethPrice, maticPrice, stakePrice, onePrice] = [
-    useSushiPrice(),
+    useAvaxPrice(),
     useEthPrice(),
     useMaticPrice(),
     useStakePrice(),
     useOnePrice(),
   ]
+
+  const testFarm = {
+    accSushiPerShare: '',
+    allocPoint: '100',
+    balance: '0',
+    chef: 2,
+    id: '0',
+    lastRewardTime: '1631266290',
+    miniChef: {
+      id: '0x962b210b559d7062b59e170f4377C20c7da4FaD8',
+      sushiPerSecond: '1300000000000000',
+      totalAllocPoint: '100',
+    },
+    owner: {
+      id: '0x962b210b559d7062b59e170f4377C20c7da4FaD8',
+      sushiPerSecond: '1300000000000000',
+      totalAllocPoint: '100',
+    },
+    pair: '0x942f5bb4AC39Ae5Ff0ef0e4aA8D1CA998C52a5b6',
+    slpBalance: '8194046008108',
+    userCount: '0',
+    rewarder: {
+      id: '0x201c900BBfEC89D9d9297c1dF8F187f07F99f8d7',
+      rewardPerSecond: '1300000000000000',
+      rewardToken: '0x2f5231532190942Afa974632ED4586c5593d7Baa',
+    },
+  }
+
+  const farms = [testFarm]
 
   const blocksPerDay = 86400 / Number(averageBlockTime)
 
@@ -89,66 +121,51 @@ export default function Farm(): JSX.Element {
     pool.owner = pool?.owner || pool?.masterChef || pool?.miniChef
     pool.balance = pool?.balance || pool?.slpBalance
 
-    const swapPair = swapPairs?.find((pair) => pair.id === pool.pair)
-    const kashiPair = kashiPairs?.find((pair) => pair.id === pool.pair)
+    // const swapPair = swapPairs?.find((pair) => pair.id === pool.pair)
+    // const kashiPair = kashiPairs?.find((pair) => pair.id === pool.pair)
 
-    const type = swapPair ? PairType.SWAP : PairType.KASHI
+    // const type = swapPair ? PairType.SWAP : PairType.KASHI
 
-    const pair = swapPair || kashiPair
+    const type = PairType.SWAP
+
+    const pair = {
+      decimals: 18,
+      id: '0x942f5bb4AC39Ae5Ff0ef0e4aA8D1CA998C52a5b6',
+      reserve0: '1928359.887405995540289756',
+      reserve1: '1920966.04641',
+      reserveETH: '1183.351142427706157233201110976883',
+      reserveUSD: '3841535.30326672239973609585975974',
+      timestamp: '1621898381',
+      token0: {
+        derivedETH: '0.0003068283960261003490764609134664169',
+        id: '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7',
+        name: 'Wrapped AVAX',
+        symbol: 'WAVAX',
+        totalSupply: '16840',
+      },
+      token0Price: '1.003849022219738620606344213098808',
+      token1: {
+        derivedETH: '0.0.034',
+        id: '0xc7198437980c041c805A1EDcbA50c1Ce5db95118',
+        name: 'Tether USD',
+        symbol: 'USDT',
+        totalSupply: '16840',
+      },
+
+      token1Price: '0.9961657359477946627790088931105365',
+      totalSupply: '1.907498502690058997',
+      trackedReserveETH: '1183.351142427706157233201110976883',
+      txCount: '81365',
+      type: 0,
+      untrackedVolumeUSD: '46853896.79482616671033425777223395',
+      volumeUSD: '46844749.23711596607606598865310647',
+    }
+    // swapPair || kashiPair
 
     const blocksPerHour = 3600 / averageBlockTime
 
     function getRewards() {
-      // TODO: Some subgraphs give sushiPerBlock & sushiPerSecond, and mcv2 gives nothing
-      const sushiPerBlock =
-        pool?.owner?.sushiPerBlock / 1e18 ||
-        (pool?.owner?.sushiPerSecond / 1e18) * averageBlockTime ||
-        masterChefV1SushiPerBlock
-
-      const rewardPerBlock = (pool.allocPoint / pool.owner.totalAllocPoint) * sushiPerBlock
-
-      const defaultReward = {
-        token: 'SUSHI',
-        icon: 'https://raw.githubusercontent.com/sushiswap/icons/master/token/sushi.jpg',
-        rewardPerBlock,
-        rewardPerDay: rewardPerBlock * blocksPerDay,
-        rewardPrice: sushiPrice,
-      }
-
-      const defaultRewards = [defaultReward]
-
-      if (pool.chef === Chef.MASTERCHEF_V2) {
-        // override for mcv2...
-        pool.owner.totalAllocPoint = masterChefV1TotalAllocPoint
-
-        const icon = ['0', '3', '4', '8'].includes(pool.id)
-          ? `https://raw.githubusercontent.com/sushiswap/icons/master/token/${pool.rewardToken.symbol.toLowerCase()}.jpg`
-          : `https://raw.githubusercontent.com/sushiswap/assets/master/blockchains/ethereum/assets/${getAddress(
-              pool.rewarder.rewardToken
-            )}/logo.png`
-
-        const decimals = 10 ** pool.rewardToken.decimals
-
-        const rewardPerBlock =
-          pool.rewardToken.symbol === 'ALCX'
-            ? pool.rewarder.rewardPerSecond / decimals
-            : (pool.rewarder.rewardPerSecond / decimals) * averageBlockTime
-
-        const rewardPerDay =
-          pool.rewardToken.symbol === 'ALCX'
-            ? (pool.rewarder.rewardPerSecond / decimals) * blocksPerDay
-            : (pool.rewarder.rewardPerSecond / decimals) * averageBlockTime * blocksPerDay
-
-        const reward = {
-          token: pool.rewardToken.symbol,
-          icon: icon,
-          rewardPerBlock: rewardPerBlock,
-          rewardPerDay: rewardPerDay,
-          rewardPrice: pool.rewardToken.derivedETH * ethPrice,
-        }
-
-        return [...defaultRewards, reward]
-      } else if (pool.chef === Chef.MINICHEF) {
+      if (pool.chef === Chef.MINICHEF) {
         const sushiPerSecond = ((pool.allocPoint / pool.miniChef.totalAllocPoint) * pool.miniChef.sushiPerSecond) / 1e18
         const sushiPerBlock = sushiPerSecond * averageBlockTime
         const sushiPerDay = sushiPerBlock * blocksPerDay
@@ -158,46 +175,38 @@ export default function Farm(): JSX.Element {
         const rewardPerDay = rewardPerBlock * blocksPerDay
 
         const reward = {
-          [ChainId.MATIC]: {
-            token: 'MATIC',
-            icon: 'https://raw.githubusercontent.com/sushiswap/icons/master/token/polygon.jpg',
-            rewardPrice: maticPrice,
-          },
-          [ChainId.XDAI]: {
-            token: 'STAKE',
-            icon: 'https://raw.githubusercontent.com/sushiswap/icons/master/token/stake.jpg',
-            rewardPrice: stakePrice,
-          },
-          [ChainId.HARMONY]: {
-            token: 'ONE',
-            icon: 'https://raw.githubusercontent.com/sushiswap/icons/master/token/one.jpg',
-            rewardPrice: onePrice,
+          [ChainId.AVALANCHE]: {
+            token: 'SMT',
+            icon: '/Summit.png',
+            rewardPrice: 0,
           },
         }
 
         return [
           {
-            ...defaultReward,
+            token: 'SMT',
+            icon: '/Summit.png',
+            rewardPrice: 0,
             rewardPerBlock: sushiPerBlock,
             rewardPerDay: sushiPerDay,
           },
           {
-            ...reward[chainId],
+            token: 'SMT',
+            icon: '/Summit.png',
+            rewardPrice: 0,
             rewardPerBlock: rewardPerBlock,
             rewardPerDay: rewardPerDay,
           },
         ]
       }
-      return defaultRewards
+      return []
     }
 
     const rewards = getRewards()
 
-    const balance = swapPair ? Number(pool.balance / 1e18) : pool.balance / 10 ** kashiPair.token0.decimals
+    const balance = Number(pool.balance / 1e18) // swapPair ? Number(pool.balance / 1e18) : pool.balance / 10 ** kashiPair.token0.decimals
 
-    const tvl = swapPair
-      ? (balance / Number(swapPair.totalSupply)) * Number(swapPair.reserveUSD)
-      : balance * kashiPair.token0.derivedETH * ethPrice
+    const tvl = (balance / Number(pair.totalSupply)) * Number(pair.reserveUSD)
 
     const roiPerBlock =
       rewards.reduce((previousValue, currentValue) => {
@@ -219,7 +228,7 @@ export default function Farm(): JSX.Element {
       ...position,
       pair: {
         ...pair,
-        decimals: pair.type === PairType.KASHI ? Number(pair.asset.tokenInfo.decimals) : 18,
+        decimals: 18,
         type,
       },
       balance,
@@ -235,23 +244,12 @@ export default function Farm(): JSX.Element {
 
   const FILTER = {
     all: (farm) => farm.allocPoint !== '0',
-    portfolio: (farm) => farm?.amount && !farm.amount.isZero(),
-    sushi: (farm) => farm.pair.type === PairType.SWAP && farm.allocPoint !== '0',
-    kashi: (farm) => farm.pair.type === PairType.KASHI && farm.allocPoint !== '0',
     '2x': (farm) => (farm.chef === Chef.MASTERCHEF_V2 || farm.chef === Chef.MINICHEF) && farm.allocPoint !== '0',
   }
 
-  const data = farms
-    .filter((farm) => {
-      return (
-        (swapPairs && swapPairs.find((pair) => pair.id === farm.pair)) ||
-        (kashiPairs && kashiPairs.find((pair) => pair.id === farm.pair))
-      )
-    })
-    .map(map)
-    .filter((farm) => {
-      return type in FILTER ? FILTER[type](farm) : true
-    })
+  const data = farms.map(map).filter((farm) => {
+    return type in FILTER ? FILTER[type](farm) : true
+  })
 
   const options = {
     keys: ['pair.id', 'pair.token0.symbol', 'pair.token1.symbol'],
@@ -271,18 +269,18 @@ export default function Farm(): JSX.Element {
         <title>Farm | Summit</title>
         <meta key="description" name="description" content="Farm SUSHI" />
       </Head>
-      <div className={classNames('sticky top-0 hidden lg:block md:col-span-1')} style={{ maxHeight: '40rem' }}>
+      {/* <div className={classNames('sticky top-0 hidden lg:block md:col-span-1')} style={{ maxHeight: '40rem' }}>
         <Menu positionsLength={positions.length} />
-      </div>
-      <div className={classNames('space-y-6 col-span-4 lg:col-span-3')}>
-        <Search
+      </div> */}
+      <div className={classNames('space-y-6 col-span-4 lg:col-span-4 mx-2')}>
+        {/* <Search
           search={search}
           term={term}
           inputProps={{
             className:
               'relative w-full bg-transparent border border-transparent focus:border-gradient-r-blue-pink-dark-900 rounded placeholder-secondary focus:placeholder-primary font-bold text-base px-6 py-3.5',
           }}
-        />
+        /> */}
 
         {/* <div className="flex items-center text-lg font-bold text-high-emphesis whitespace-nowrap">
             Ready to Stake{' '}
@@ -300,3 +298,7 @@ export default function Farm(): JSX.Element {
     </Container>
   )
 }
+
+Farm.Guard = NetworkGuard([ChainId.AVALANCHE])
+
+export default Farm
