@@ -2,6 +2,8 @@ import { getAverageBlockTime, getCustomDayBlock, getMassBlocks, getOneDayBlock, 
 
 import { useActiveWeb3React } from '../../../hooks'
 import useSWR from 'swr'
+import { Chain } from '@ethereumjs/common'
+import { ChainId } from '@sushiswap/sdk'
 
 export function useOneDayBlock(swrConfig = undefined) {
   const { chainId } = useActiveWeb3React()
@@ -49,6 +51,10 @@ export function useMassBlocks(timestamps: number[] | string[], swrConfig = undef
 
 export function useAverageBlockTime(swrConfig = undefined) {
   const { chainId } = useActiveWeb3React()
+
+  if (chainId === ChainId.AVALANCHE) {
+    return 1.6
+  }
 
   const { data } = useSWR(
     chainId ? ['averageBlockTime', chainId] : null,
