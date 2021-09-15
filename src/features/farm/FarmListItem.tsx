@@ -12,7 +12,7 @@ const FarmListItem = ({ farm, ...rest }) => {
   const token0 = useCurrency(farm.pair.token0.id)
   const token1 = useCurrency(farm.pair.token1.id)
 
-  console.log('FarmListItem:', farm)
+  console.log('FarmListItem:', farm, token0, token1)
 
   return (
     <Disclosure {...rest}>

@@ -18,7 +18,7 @@ export default function Status({ initialData }) {
     <Container id="status-page" className="py-4 md:py-8 lg:py-12" maxWidth="full">
       <Head>
         <title>Status | Summit</title>
-        <meta key="description" name="description" content="Sushi Status..." />
+        <meta key="description" name="description" content="Summit Status..." />
       </Head>
       {/* <div className="w-full max-w-6xl mx-auto">
                 <Typography component="h1" variant="h1" className="w-full mb-4">
