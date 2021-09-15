@@ -44,7 +44,7 @@ function Farm(): JSX.Element {
   const { chainId } = useActiveWeb3React()
   const router = useRouter()
 
-  const type = router.query.filter == null ? 'all' : (router.query.filter as string)
+  // const type = router.query.filter == null ? 'all' : (router.query.filter as string)
 
   // const pairAddresses = useFarmPairAddresses()
 
@@ -248,7 +248,7 @@ function Farm(): JSX.Element {
   }
 
   const data = farms.map(map).filter((farm) => {
-    return type in FILTER ? FILTER[type](farm) : true
+    return true
   })
 
   const options = {
@@ -256,12 +256,12 @@ function Farm(): JSX.Element {
     threshold: 0.4,
   }
 
-  // console.log({ data })
+  console.log('data:', { data })
 
-  const { result, term, search } = useFuse({
-    data,
-    options,
-  })
+  // const { result, term, search } = useFuse({
+  //   data,
+  //   options,
+  // })
 
   return (
     <Container id="farm-page" className="grid h-full grid-cols-4 py-4 mx-auto md:py-8 lg:py-12 gap-9" maxWidth="7xl">
@@ -293,7 +293,7 @@ function Farm(): JSX.Element {
           <div className="w-full h-0 ml-4 font-bold bg-transparent border border-b-0 border-transparent rounded text-high-emphesis md:border-gradient-r-blue-pink-dark-800 opacity-20"></div>
         </div>
 
-        <FarmList farms={result} term={term} />
+        <FarmList farms={data} term={'term'} />
       </div>
     </Container>
   )
